@@ -8,8 +8,9 @@ public class GameControllerScript : MonoBehaviour
     private float minCoinCharacterDistance = 10.0f;
     private float maxCoinCharacterDistance = 30.0f;
     private float minCoinMapOffset = 50.0f;
-    private float minCoinHeight = 54.0f;
-    private float maxCoinHeight = 56.5f;
+    private float minCoinHeight = 1.0f;
+    private float maxCoinHeight = 2.5f;
+    private float seaLevel;
 
 	private readonly string[] listenableEvents = new string[] { "Disappear", nameof(GameState) };
 
@@ -18,6 +19,8 @@ public class GameControllerScript : MonoBehaviour
     {
         GameEventController.AddListener(listenableEvents, OnGameEvent);
         OnGameEvent(nameof(GameState), null);
+
+        seaLevel = GameObject.Find("Sea").transform.position.y;
     }
 
 	private void OnGameEvent(string type, object payload)
@@ -76,17 +79,18 @@ public class GameControllerScript : MonoBehaviour
             );
             coinPosition = character.transform.position + coinDelta;
             lim += 1;
-        } while (lim < 100 && (
+			coinPosition.y = Terrain.activeTerrain.SampleHeight(coinPosition) +
+			Random.Range(minCoinHeight, maxCoinHeight);
+		} while (lim < 100 && (
             coinDelta.magnitude > maxCoinCharacterDistance
             || coinDelta.magnitude < minCoinCharacterDistance
             || coinPosition.x < minCoinMapOffset
             || coinPosition.z < minCoinMapOffset
             || coinPosition.x > 1000 - minCoinMapOffset
             || coinPosition.z > 1000 - minCoinMapOffset
+            || coinPosition.y - seaLevel < 2
         ));
 
-        coinPosition.y = Terrain.activeTerrain.SampleHeight(coinPosition) +
-            Random.Range(minCoinHeight, maxCoinHeight);
 
         GameObject coin = GameObject.Instantiate(coinPrefab);
         coin.transform.position = coinPosition;

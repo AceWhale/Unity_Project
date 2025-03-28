@@ -1,7 +1,39 @@
 
+using UnityEngine;
+
 public class GameState
 {
 	public static float gameTime24 { get; set; } = 12.0f;
+
+	#region Skyboxes
+	private static Material _daySkybox;
+	public static Material daySkybox
+	{
+		get => _daySkybox;
+		set
+		{
+			if (value != _daySkybox)
+			{
+				_daySkybox = value;
+				GameEventController.EmitEvent(nameof(GameState), nameof(daySkybox));
+			}
+		}
+	}
+
+	private static Material _nightSkybox;
+	public static Material nightSkybox
+	{
+		get => _nightSkybox;
+		set
+		{
+			if (value != _nightSkybox)
+			{
+				_nightSkybox = value;
+				GameEventController.EmitEvent(nameof(GameState), nameof(nightSkybox));
+			}
+		}
+	}
+	#endregion
 
 	#region Coins
 
@@ -19,7 +51,6 @@ public class GameState
 
 	#endregion
 
-
 	#region Stamina
 	public const float maxPossibleStamina = 20.0f;
 	private static float _maxStamina = maxPossibleStamina / 2;
@@ -34,7 +65,6 @@ public class GameState
 	}
 	public static float stamina { get; set; } = maxStamina;
 	#endregion
-
 
 	#region coinSpawnDistance
 	public const float coinSpawnDistanceMin = 10.0f;
@@ -117,6 +147,22 @@ public class GameState
 			{
 				_isHintsVisible = value;
 				GameEventController.EmitEvent(nameof(GameState), nameof(isHintsVisible));
+			}
+		}
+	}
+
+	#endregion
+	#region isHintsVisible
+	private static int _activeSceneIndex = 0;
+	public static int activeSceneIndex
+	{
+		get => _activeSceneIndex;
+		set
+		{
+			if (_activeSceneIndex != value)
+			{
+				_activeSceneIndex = value;
+				GameEventController.EmitEvent(nameof(GameState), nameof(activeSceneIndex));
 			}
 		}
 	}

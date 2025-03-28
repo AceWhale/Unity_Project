@@ -17,6 +17,7 @@ public class CameraScript : MonoBehaviour
     {
         cameraOffset = this.transform.position - cameraAnchor.position;
         lookAction = InputSystem.actions.FindAction("Look");
+        GameState.activeSceneIndex = 1;
     }
 
     void Update()
